@@ -1,0 +1,50 @@
+/* src/components/Emergency/Emergency.css */
+.emergency-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sos-section {
+  text-align: center;
+}
+
+.sos-button {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  border: none;
+  padding: 40px 60px;
+  border-radius: 60px;
+  cursor: pointer;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s;
+  animation: pulse 2s infinite;
+}
+
+.sos-button i { font-size: 48px; }
+.sos-button span { font-size: 24px; font-weight: 700; letter-spacing: 2px; }
+.sos-button small { font-size: 12px; opacity: 0.8; }
+
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+.medical-id-card { background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 20px; padding: 24px; color: white; }
+.medical-id-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+.medical-id-header h3 { display: flex; align-items: center; gap: 8px; }
+.download-id-btn { background: rgba(255,255,255,0.2); border: none; padding: 8px 16px; border-radius: 10px; color: white; cursor: pointer; }
+.id-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.2); }
+.id-row span { opacity: 0.8; }
+
+.contacts-list { display: flex; flex-direction: column; gap: 12px; }
+.contact-card { background: white; border-radius: 16px; padding: 16px; display: flex; align-items: center; gap: 16px; border: 1px solid #e2e8f0; }
+.contact-avatar i { font-size: 48px; color: #3b82f6; }
+.contact-info { flex: 1; }
+.contact-info h4 { margin-bottom: 4px; }
+.contact-info p { font-size: 0.8rem; color: #64748b; }
+.contact-phone { margin-top: 4px; }
+.call-btn, .delete-btn { width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer; margin-left: 8px; }
+.call-btn { background: #10b981; color: white; }
+.delete-btn { background: #fee2e2; color: #ef4444; }
+.empty-contacts { text-align: center; padding: 40px; color: #94a3b8; }

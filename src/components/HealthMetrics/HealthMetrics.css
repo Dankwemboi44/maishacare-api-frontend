@@ -1,0 +1,181 @@
+/* src/components/HealthMetrics/HealthMetrics.css */
+.health-metrics-container {
+  padding: 24px;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.metrics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.metrics-header h2 {
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.time-range-selector {
+  display: flex;
+  gap: 8px;
+  background: #f1f5f9;
+  padding: 4px;
+  border-radius: 12px;
+}
+
+.range-btn {
+  padding: 6px 16px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+}
+
+.range-btn.active {
+  background: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  color: #3b82f6;
+  font-weight: 500;
+}
+
+.metrics-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.summary-card {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s;
+}
+
+.summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.summary-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #e6f7ff, #d4eaff);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.summary-icon i {
+  font-size: 24px;
+  color: #3b82f6;
+}
+
+.summary-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.summary-unit {
+  font-size: 0.7rem;
+  color: #64748b;
+  margin-left: 4px;
+}
+
+.summary-label {
+  display: block;
+  font-size: 0.7rem;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.summary-trend {
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-left: auto;
+}
+
+.summary-trend.positive { background: #d1fae5; color: #065f46; }
+.summary-trend.stable { background: #dbeafe; color: #1e40af; }
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 24px;
+}
+
+.chart-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 20px;
+  transition: all 0.3s;
+}
+
+.chart-card:hover {
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.chart-card.full-width {
+  grid-column: 1 / -1;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chart-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.normal-range {
+  font-size: 0.7rem;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.chart-container {
+  height: 250px;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .metrics-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .summary-card {
+    flex-wrap: wrap;
+  }
+}

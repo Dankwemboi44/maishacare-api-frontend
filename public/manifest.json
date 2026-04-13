@@ -1,0 +1,44 @@
+{
+  "short_name": "MaishaCare AI",
+  "name": "MaishaCare AI - AI Powered Health Assistant",
+  "description": "Your health, our priority. Connect with doctors, manage prescriptions, and access health records.",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#3b82f6",
+  "background_color": "#ffffff",
+  "orientation": "portrait",
+  "categories": ["health", "medical", "fitness"],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View your health dashboard",
+      "url": "/patient/dashboard",
+      "icons": [{ "src": "logo192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Book Appointment",
+      "short_name": "Book",
+      "description": "Book a doctor appointment",
+      "url": "/patient/dashboard?tab=book",
+      "icons": [{ "src": "logo192.png", "sizes": "192x192" }]
+    }
+  ]
+}

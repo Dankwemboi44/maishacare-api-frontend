@@ -1,0 +1,178 @@
+/* src/components/VideoCall/VideoCall.css */
+.video-call-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #1a1a2e;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+}
+
+.video-call-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: #16213e;
+  color: white;
+}
+
+.call-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.call-info i {
+  font-size: 20px;
+}
+
+.call-duration {
+  background: rgba(255,255,255,0.2);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.end-call-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.video-grid {
+  flex: 1;
+  display: flex;
+  position: relative;
+  padding: 20px;
+}
+
+.remote-video {
+  flex: 1;
+  background: #0f172a;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.waiting-screen {
+  text-align: center;
+  color: white;
+}
+
+.waiting-screen i {
+  font-size: 80px;
+  margin-bottom: 20px;
+  opacity: 0.7;
+}
+
+.connecting-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: white;
+}
+
+.connecting-screen i {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.remote-label, .local-label {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  background: rgba(0,0,0,0.6);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: white;
+}
+
+.local-video {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 200px;
+  height: 150px;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid #3b82f6;
+  z-index: 10;
+}
+
+.local-video-element {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-off-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.call-controls {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  background: #16213e;
+}
+
+.control-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: #334155;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.control-btn:hover {
+  background: #475569;
+}
+
+.control-btn.active {
+  background: #ef4444;
+}
+
+.control-btn.end-call {
+  background: #ef4444;
+}
+
+.control-btn.end-call:hover {
+  background: #dc2626;
+}
+
+@media (max-width: 768px) {
+  .local-video {
+    width: 120px;
+    height: 90px;
+  }
+}
