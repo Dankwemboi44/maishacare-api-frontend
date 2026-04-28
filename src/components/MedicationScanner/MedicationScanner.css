@@ -1,7 +1,0 @@
-.medication-scanner { background: white; border-radius: 24px; padding: 24px; text-align: center; }
-.scanner-area { background: #f1f5f9; border: 2px dashed #cbd5e1; border-radius: 20px; padding: 60px; margin: 24px 0; cursor: pointer; transition: all 0.3s; }
-.scanner-area:hover { background: #e2e8f0; border-color: #3b82f6; }
-.scanner-area i { font-size: 48px; color: #64748b; margin-bottom: 16px; display: block; }
-.scan-result { background: #d1fae5; border-radius: 16px; padding: 20px; margin-top: 20px; text-align: left; }
-.med-details { margin: 16px 0; }
-.add-med-btn { background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; width: 100%; }

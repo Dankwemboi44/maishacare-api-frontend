@@ -7,7 +7,6 @@ import DoctorDashboard from './pages/DoctorDashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import './styles/global.css';
-// theme.css removed - no longer needed
 
 // Protected Route wrapper component
 const ProtectedRoute = ({ children, allowedRole }) => {

@@ -1,6 +1,18 @@
 // src/components/common/TopNavbar.js
 import React, { useState, useEffect, useRef } from 'react';
-import { FaHeartbeat, FaBell, FaUserMd, FaUserCircle, FaChevronDown, FaUserEdit, FaSignOutAlt, FaCog, FaCheckCircle, FaInfoCircle, FaExclamationTriangle } from 'react-icons/fa';
+import { 
+  FaHeartbeat, 
+  FaBell, 
+  FaUserMd, 
+  FaUserCircle, 
+  FaChevronDown, 
+  FaUserEdit, 
+  FaSignOutAlt, 
+  FaCog, 
+  FaCheckCircle, 
+  FaInfoCircle, 
+  FaExclamationTriangle 
+} from 'react-icons/fa';
 import './TopNavbar.css';
 
 const TopNavbar = ({ 
@@ -8,14 +20,34 @@ const TopNavbar = ({
   userType, 
   onProfileClick, 
   onLogout,
+  onSettingsClick,
+  onViewAllNotifications,
   notifications = [],
   onMarkAsRead,
   onClearAll
 }) => {
   const [scrolled, setScrolled] = useState(false);
   const [showNotificationPanel, setShowNotificationPanel] = useState(false);
-  const panelRef = useRef(null);
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [logoText, setLogoText] = useState('MaishaCare AI');
+  
+  const notificationPanelRef = useRef(null);
+  const userDropdownRef = useRef(null);
 
+  // Logo text rotation (FIXED: No direct DOM manipulation)
+  useEffect(() => {
+    const texts = ['MaishaCare AI', 'AI Powered Health Assistant'];
+    let currentIndex = 0;
+    
+    const interval = setInterval(() => {
+      currentIndex = (currentIndex + 1) % texts.length;
+      setLogoText(texts[currentIndex]);
+    }, 3000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -24,15 +56,34 @@ const TopNavbar = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close panel when clicking outside
+  // Close panels when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (panelRef.current && !panelRef.current.contains(event.target)) {
+      // Close notification panel
+      if (notificationPanelRef.current && !notificationPanelRef.current.contains(event.target)) {
         setShowNotificationPanel(false);
       }
+      // Close user dropdown
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
+        setShowUserDropdown(false);
+      }
     };
+    
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Close dropdown when pressing Escape key
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        setShowNotificationPanel(false);
+        setShowUserDropdown(false);
+      }
+    };
+    
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
   }, []);
 
   const unreadCount = notifications.filter(n => !n.read).length;
@@ -51,44 +102,41 @@ const TopNavbar = ({
     }
   };
 
-  // Format time ago
+  // Format time ago (ENHANCED with better formatting)
   const timeAgo = (timestamp) => {
+    if (!timestamp) return 'Just now';
+    
     const seconds = Math.floor((new Date() - new Date(timestamp)) / 1000);
+    
+    if (seconds < 5) return 'Just now';
     if (seconds < 60) return `${seconds} seconds ago`;
+    
     const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) return `${minutes} min ago`;
+    if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    
     const hours = Math.floor(minutes / 60);
     if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    
     const days = Math.floor(hours / 24);
-    return `${days} day${days > 1 ? 's' : ''} ago`;
+    if (days < 7) return `${days} day${days > 1 ? 's' : ''} ago`;
+    
+    const weeks = Math.floor(days / 7);
+    if (weeks < 4) return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
+    
+    const months = Math.floor(days / 30);
+    return `${months} month${months > 1 ? 's' : ''} ago`;
   };
 
-  // Logo text with transition
-  const [logoText, setLogoText] = useState('MaishaCare AI');
-  
-  useEffect(() => {
-    const texts = ['MaishaCare AI', 'AI Powered Health Assistant'];
-    let currentIndex = 0;
-    
-    const interval = setInterval(() => {
-      currentIndex = (currentIndex + 1) % texts.length;
-      const logoElement = document.querySelector('.navbar-logo .logo-text');
-      if (logoElement) {
-        logoElement.style.opacity = '0';
-        setTimeout(() => {
-          setLogoText(texts[currentIndex]);
-          logoElement.style.opacity = '1';
-        }, 300);
-      } else {
-        setLogoText(texts[currentIndex]);
-      }
-    }, 3000);
-    
-    return () => clearInterval(interval);
-  }, []);
-
+  // Toggle notification panel (closes user dropdown)
   const handleNotificationClick = () => {
     setShowNotificationPanel(!showNotificationPanel);
+    setShowUserDropdown(false); // Close other dropdown
+  };
+
+  // Toggle user dropdown (closes notification panel)
+  const handleUserDropdownToggle = () => {
+    setShowUserDropdown(!showUserDropdown);
+    setShowNotificationPanel(false); // Close other panel
   };
 
   const handleMarkAsRead = (id) => {
@@ -99,9 +147,8 @@ const TopNavbar = ({
 
   const handleMarkAllAsRead = () => {
     if (onMarkAsRead) {
-      notifications.forEach(n => {
-        if (!n.read) onMarkAsRead(n.id);
-      });
+      const unreadNotifications = notifications.filter(n => !n.read);
+      unreadNotifications.forEach(n => onMarkAsRead(n.id));
     }
   };
 
@@ -109,6 +156,49 @@ const TopNavbar = ({
     if (onClearAll) {
       onClearAll();
     }
+    setShowNotificationPanel(false);
+  };
+
+  const handleViewAll = () => {
+    if (onViewAllNotifications) {
+      onViewAllNotifications();
+    }
+    setShowNotificationPanel(false);
+  };
+
+  const handleSettingsClick = () => {
+    if (onSettingsClick) {
+      onSettingsClick();
+    }
+    setShowUserDropdown(false);
+  };
+
+  const handleProfileClick = () => {
+    if (onProfileClick) {
+      onProfileClick();
+    }
+    setShowUserDropdown(false);
+  };
+
+  const handleLogout = () => {
+    if (onLogout) {
+      onLogout();
+    }
+    setShowUserDropdown(false);
+  };
+
+  // Get user display name
+  const getDisplayName = () => {
+    if (!user?.name) return 'User';
+    return user.name.split(' ')[0];
+  };
+
+  // Get user avatar or default
+  const getUserAvatar = () => {
+    if (user?.avatar) {
+      return <img src={user.avatar} alt={user.name} className="user-avatar-img" />;
+    }
+    return userType === 'doctor' ? <FaUserMd /> : <FaUserCircle />;
   };
 
   return (
@@ -119,7 +209,7 @@ const TopNavbar = ({
           <div className="logo-icon">
             <FaHeartbeat />
           </div>
-          <span className="logo-text" style={{ transition: 'opacity 0.3s ease-in-out' }}>
+          <span className="logo-text" style={{ transition: 'opacity 0.2s ease-in-out' }}>
             {logoText}
           </span>
           {userType === 'doctor' && <span className="doctor-tag">Doctor Portal</span>}
@@ -127,11 +217,12 @@ const TopNavbar = ({
 
         {/* Right Section */}
         <div className="navbar-actions">
-          {/* Notifications - Real Notification Icon */}
-          <div className="notification-wrapper" ref={panelRef}>
+          {/* Notifications Panel */}
+          <div className="notification-wrapper" ref={notificationPanelRef}>
             <button 
               className={`action-btn notifications-btn ${unreadCount > 0 ? 'has-notifications' : ''}`} 
               onClick={handleNotificationClick}
+              aria-label="Notifications"
             >
               <FaBell className="bell-icon" />
               {unreadCount > 0 && (
@@ -159,6 +250,7 @@ const TopNavbar = ({
                     )}
                   </div>
                 </div>
+                
                 <div className="notification-panel-body">
                   {notifications.length === 0 ? (
                     <div className="no-notifications">
@@ -172,6 +264,9 @@ const TopNavbar = ({
                         key={notification.id} 
                         className={`notification-item ${!notification.read ? 'unread' : ''}`}
                         onClick={() => handleMarkAsRead(notification.id)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyPress={(e) => e.key === 'Enter' && handleMarkAsRead(notification.id)}
                       >
                         <div className="notification-icon">
                           {getNotificationIcon(notification.type)}
@@ -186,9 +281,12 @@ const TopNavbar = ({
                     ))
                   )}
                 </div>
+                
                 {notifications.length > 0 && (
                   <div className="notification-panel-footer">
-                    <button className="view-all-btn">View all notifications</button>
+                    <button className="view-all-btn" onClick={handleViewAll}>
+                      View all notifications
+                    </button>
                   </div>
                 )}
               </div>
@@ -196,31 +294,34 @@ const TopNavbar = ({
           </div>
 
           {/* User Profile Dropdown */}
-          <div className="user-dropdown">
-            <button className="action-btn user-btn" onClick={onProfileClick}>
-              {user?.avatar ? (
-                <img src={user.avatar} alt={user.name} className="user-avatar-img" />
-              ) : (
-                userType === 'doctor' ? <FaUserMd /> : <FaUserCircle />
-              )}
-              <span className="user-name-mobile">{user?.name?.split(' ')[0] || 'User'}</span>
-              <FaChevronDown className="dropdown-arrow" />
+          <div className="user-dropdown" ref={userDropdownRef}>
+            <button 
+              className="action-btn user-btn" 
+              onClick={handleUserDropdownToggle}
+              aria-label="User menu"
+            >
+              {getUserAvatar()}
+              <span className="user-name-mobile">{getDisplayName()}</span>
+              <FaChevronDown className={`dropdown-arrow ${showUserDropdown ? 'rotated' : ''}`} />
             </button>
-            <div className="dropdown-menu">
-              <button onClick={onProfileClick}>
-                <FaUserEdit />
-                <span>Edit Profile</span>
-              </button>
-              <button onClick={() => {}}>
-                <FaCog />
-                <span>Settings</span>
-              </button>
-              <hr />
-              <button onClick={onLogout}>
-                <FaSignOutAlt />
-                <span>Logout</span>
-              </button>
-            </div>
+            
+            {showUserDropdown && (
+              <div className="dropdown-menu">
+                <button onClick={handleProfileClick}>
+                  <FaUserEdit />
+                  <span>Edit Profile</span>
+                </button>
+                <button onClick={handleSettingsClick}>
+                  <FaCog />
+                  <span>Settings</span>
+                </button>
+                <hr />
+                <button onClick={handleLogout}>
+                  <FaSignOutAlt />
+                  <span>Logout</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

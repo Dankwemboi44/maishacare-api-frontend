@@ -1,34 +1,28 @@
-// pages/PatientDashboard.js - COMPLETE WORKING VERSION
-// Fix: Appointment status is set to "pending" (not auto-confirmed)
-// Removed theme, removed emojis
-// Updated prescriptions component integration
-
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   FaHome, FaCalendarAlt, FaCalendarPlus, FaPrescriptionBottle, 
   FaFlask, FaFolder, FaBell, FaSyringe, FaChartLine, 
-  FaBrain, FaExclamationTriangle, FaUsers, FaTruck, FaFileInvoiceDollar,
-  FaNewspaper, FaDownload, FaSms, FaCamera, FaBullseye, FaRobot,
-  FaHeartbeat, FaTachometerAlt, FaStethoscope, FaMicrophone,
-  FaVideo, FaPhoneSlash, FaCommentDots, FaUserCircle, FaUserMd,
+  FaExclamationTriangle, FaTruck, FaRobot, FaStethoscope,
+  FaHeartbeat, FaTachometerAlt, FaUserMd, FaMicrophone, 
+  FaVideo, FaPhoneSlash, FaCommentDots, FaUserCircle,
   FaChevronDown, FaPlus, FaEdit, FaTrash, FaCheckCircle,
   FaClock, FaCalendarDay, FaArrowRight, FaSpinner, FaKey,
   FaSignOutAlt, FaBars, FaPaperPlane, FaInfoCircle, FaUserEdit,
-  FaArrowLeft, FaBolt, FaShieldAlt, FaAward, FaQuoteLeft, FaStar,
-  FaHistory, FaNotesMedical, FaAmbulance, FaFileInvoice, FaCalendarWeek,
-  FaPercentage, FaChartPie, FaFileExport, FaShareAlt
+  FaArrowLeft, FaBolt, FaShieldAlt, FaQuoteLeft, FaStar,
+  FaHistory, FaNotesMedical, FaAmbulance, FaCalendarWeek,
+  FaPercentage, FaChartPie, FaNewspaper, FaDownload
 } from 'react-icons/fa';
 import Sidebar from '../components/common/Sidebar';
-import VideoCall from '../components/VideoCall/VideoCall';
 import HealthMetrics from '../components/HealthMetrics/HealthMetrics';
 import Emergency from '../components/Emergency/Emergency';
-import HealthArticles from '../components/HealthArticles/HealthArticles';
-import ExportRecords from '../components/ExportRecords/ExportRecords';
-import FamilyManagement from '../components/Family/FamilyManagement';
 import PharmacyDelivery from '../components/Pharmacy/PharmacyDelivery';
-import InsuranceClaims from '../components/Insurance/InsuranceClaims';
 import GeminiChat from '../components/GeminiAI/GeminiChat';
 import Prescriptions from '../components/Prescriptions/Prescriptions';
+import SymptomChecker from '../components/SymptomChecker/SymptomChecker';
+import BookAppointment from '../components/Appointments/BookAppointment';
+import LabResults from '../components/LabResults/LabResults';
+import MedicalRecords from '../components/MedicalRecords/MedicalRecords';
+
 import '../styles/global.css';
 import '../styles/dashboard.css';
 
@@ -110,6 +104,7 @@ const PatientDashboard = () => {
   const [passwordSuccess, setPasswordSuccess] = useState('');
   const [resettingPassword, setResettingPassword] = useState(false);
 
+  // Updated menuItems - ADDED Symptom Checker
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: <FaHome />, badge: 0 },
     { id: 'appointments', label: 'Appointments', icon: <FaCalendarAlt />, badge: 0 },
@@ -118,14 +113,11 @@ const PatientDashboard = () => {
     { id: 'lab-results', label: 'Lab Results', icon: <FaFlask />, badge: labResults.filter(l => l.status === 'pending').length },
     { id: 'medical-records', label: 'Medical Records', icon: <FaFolder />, badge: 0 },
     { id: 'reminders', label: 'Reminders', icon: <FaBell />, badge: 0 },
-    { id: 'vaccinations', label: 'Vaccinations', icon: <FaSyringe />, badge: 0 },
     { id: 'health-metrics', label: 'Health Metrics', icon: <FaChartLine />, badge: 0 },
     { id: 'emergency', label: 'Emergency', icon: <FaExclamationTriangle />, badge: 0 },
-    { id: 'family', label: 'Family Access', icon: <FaUsers />, badge: 0 },
+    { id: 'symptom-checker', label: 'Symptom Checker', icon: <FaStethoscope />, badge: 0 },
     { id: 'pharmacy', label: 'Pharmacy', icon: <FaTruck />, badge: 0 },
-    { id: 'insurance', label: 'Insurance', icon: <FaFileInvoiceDollar />, badge: 0 },
     { id: 'health-tips', label: 'Health Tips', icon: <FaNewspaper />, badge: 0 },
-    { id: 'export', label: 'Export Records', icon: <FaDownload />, badge: 0 },
     { id: 'ai-doctor', label: 'AI Doctor', icon: <FaRobot />, badge: 0 }
   ];
 
@@ -606,6 +598,12 @@ const PatientDashboard = () => {
             <p>View your test results</p>
             <FaArrowRight className="action-arrow" />
           </div>
+          <div className="action-card" onClick={() => setActiveTab('symptom-checker')}>
+            <div className="action-icon"><FaStethoscope /></div>
+            <h3>Check Symptoms</h3>
+            <p>Analyze your health concerns</p>
+            <FaArrowRight className="action-arrow" />
+          </div>
           <div className="action-card" onClick={() => setActiveTab('ai-doctor')}>
             <div className="action-icon"><FaRobot /></div>
             <h3>AI Assistant</h3>
@@ -860,10 +858,7 @@ const PatientDashboard = () => {
     );
   };
 
-  // FIXED: Updated renderPrescriptions to properly pass patientId and userType
-  const renderPrescriptions = () => (
-    <Prescriptions patientId={patient?.id} userType="patient" />
-  );
+  const renderPrescriptions = () => <Prescriptions patientId={patient?.id} userType="patient" />;
 
   const renderLabResults = () => (
     <div className="page-container-modern">
@@ -953,7 +948,7 @@ const PatientDashboard = () => {
     <div className="page-container-modern">
       <div className="page-header-modern">
         <h1><FaRobot /> AI-Powered Health Assistant</h1>
-        <p>Powered by Google Gemini AI - Your intelligent health companion</p>
+        <p>Your intelligent health companion (No internet connection required)</p>
       </div>
       <div style={{ height: 'calc(100vh - 200px)', minHeight: '600px' }}>
         <GeminiChat user={patient} userType="patient" />
@@ -961,13 +956,57 @@ const PatientDashboard = () => {
     </div>
   );
   
+  const renderSymptomChecker = () => (
+    <div className="page-container-modern">
+      <div className="page-header-modern">
+        <h1><FaStethoscope /> Symptom Checker</h1>
+        <p>Guided questions to help understand your symptoms</p>
+      </div>
+      <SymptomChecker 
+        onAskAIDoctor={() => setActiveTab('ai-doctor')}
+        userName={patient?.name}
+      />
+    </div>
+  );
+  
   const renderHealthMetricsComp = () => <HealthMetrics patientId={patient?.id} />;
   const renderEmergencyComp = () => <Emergency patientId={patient?.id} patientName={patient?.name} />;
-  const renderFamilyComp = () => <FamilyManagement currentUser={patient} />;
   const renderPharmacyComp = () => <PharmacyDelivery />;
-  const renderInsuranceComp = () => <InsuranceClaims />;
-  const renderHealthTipsComp = () => <HealthArticles />;
-  const renderExportRecordsComp = () => <ExportRecords records={medicalRecords} />;
+  
+  const renderHealthTipsComp = () => (
+    <div className="page-container-modern">
+      <div className="page-header-modern">
+        <h1><FaNewspaper /> Health Tips & Articles</h1>
+        <p>Stay informed with the latest health insights</p>
+      </div>
+      <div className="health-tips-grid">
+        <div className="health-tip-card">
+          <h3>💪 Boost Your Immunity</h3>
+          <p>Regular exercise, balanced diet, and adequate sleep are key to a strong immune system.</p>
+        </div>
+        <div className="health-tip-card">
+          <h3>🥗 Healthy Eating Habits</h3>
+          <p>Include fruits, vegetables, whole grains, and lean proteins in your daily meals.</p>
+        </div>
+        <div className="health-tip-card">
+          <h3>💧 Stay Hydrated</h3>
+          <p>Drink at least 8 glasses of water daily to maintain optimal body function.</p>
+        </div>
+        <div className="health-tip-card">
+          <h3>😴 Sleep Hygiene</h3>
+          <p>Aim for 7-8 hours of quality sleep. Maintain a consistent sleep schedule.</p>
+        </div>
+        <div className="health-tip-card">
+          <h3>🧘 Mental Wellness</h3>
+          <p>Practice meditation or deep breathing exercises to reduce stress.</p>
+        </div>
+        <div className="health-tip-card">
+          <h3>🏃 Active Lifestyle</h3>
+          <p>Get at least 30 minutes of physical activity most days of the week.</p>
+        </div>
+      </div>
+    </div>
+  );
 
   const renderProfileModal = () => (
     showProfileModal && (
@@ -1259,21 +1298,23 @@ const PatientDashboard = () => {
     switch(activeTab) {
       case 'dashboard': return renderDashboard();
       case 'appointments': return renderAppointments();
-      case 'book': return renderBookAppointment();
+      case 'book': return <BookAppointment doctors={doctors} onBook={handleBookAppointment} />;
       case 'prescriptions': return renderPrescriptions();
-      case 'lab-results': return renderLabResults();
       case 'medical-records': return renderMedicalRecordsTab();
       case 'reminders': return renderRemindersTab();
       case 'vaccinations': return renderVaccinationsTab();
       case 'health-metrics': return renderHealthMetricsComp();
       case 'emergency': return renderEmergencyComp();
-      case 'family': return renderFamilyComp();
       case 'pharmacy': return renderPharmacyComp();
-      case 'insurance': return renderInsuranceComp();
       case 'health-tips': return renderHealthTipsComp();
-      case 'export': return renderExportRecordsComp();
+      case 'symptom-checker': return renderSymptomChecker();
       case 'ai-doctor': return renderAIDoctor();
+      case 'lab-results': return <LabResults userType="patient" patientId={patient?.id} />;
+      case 'medical-records': return <MedicalRecords userType="patient" patientId={patient?.id} />;
+
+
       default: return renderDashboard();
+      
     }
   };
 
